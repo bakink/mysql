@@ -1,0 +1,10 @@
+
+SHOW FULL PROCESSLIST
+
+PARAMETRE	SIMDIKI_DEGER	ONERILEN_DEGER
+innodb_buffer_pool_size	128MB	5GB
+innodb_flush_method		O_DIRECT
+innodb_buffer_pool_instances	1	8
+innodb_write_io_threads 	4	8
+innodb_read_io_threads	4	8
+
