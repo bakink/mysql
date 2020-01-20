@@ -7,3 +7,28 @@ for i in `find /backup/mysqlbackup/ -maxdepth 1 -type d -mtime +1 -print`; do ec
 for i in `find /backup/mysqlbackup/ -maxdepth 1 -type d -mtime +1 -print`; do echo -e "Deleting directory $i";rm -rf $i; done
 #cron
 20 10 * * * /backup/scripts/full_backup.sh &>/tmp/mycommand.log
+
+
+
+BACKUP FULL / INCREMENTAL -------------------------
+1) innobackupex --user=root --password=admin /backup (BACKUP FULL) 
+2) innobackupex --incremental /backup --incremental-basedir=/backup/2017-05-04_05-27-23 --user=root --password=admin (BACKUP INC) 
+3) innobackupex --apply-log --redo-only /backup/2017-05-04_05-27-23 --user=root --password=admin (PREPARE FULL) 
+4) innobackupex --apply-log --redo-only /backup/2017-05-04_05-27-23 --incremental-dir=2017-05-04_05-28-34 --user=root --password=admin (PREPARE INC) 
+5) innobackupex --incremental /backup --incremental-basedir=/backup/2017-05-04_05-27-23 --user=root --password=admin (BACKUP INC) 
+6) innobackupex --apply-log --redo-only /backup/2017-05-04_05-27-23 --incremental-dir=2017-05-04_05-31-35 --user=root --password=admin (PREPARE INC) 
+
+[root@linux1 ~]# ls -lh /backup 
+total 12K 
+drwxr-x---. 6 root root 4.0K May 4 05:32 2017-05-04_05-27-23 (FULL) 
+drwxr-x---. 6 root root 4.0K May 4 05:30 2017-05-04_05-28-34 (INCREMENTAL) 
+drwxr-x---. 6 root root 4.0K May 4 05:32 2017-05-04_05-31-35 (INCREMENTAL) 
+
+RESTORE FULL ------------
+[root@linux1 ~]# systemctl stop mysqld 
+[root@linux1 ~]# mkdir /tmp/mysql 
+[root@linux1 ~]# mv /var/lib/mysql/* /tmp/mysql 
+
+[root@linux1 ~]# innobackupex --copy-back /backup/2017-05-04_05-27-23 (FULL) 
+[root@linux1 ~]# chown -R mysql.mysql /var/lib/mysql 
+[root@linux1 ~]# systemctl start mysqld
