@@ -1,0 +1,8 @@
+
+
+mysqlbinlog mysql-bin.000003 > /tmp/mysql-bin.000003.sql
+mysqlbinlog --start-datetime="2017-04-19 20:36:16" --stop-datetime="2017-04-19 21:10:43" /var/lib/mysql/mysql-bin.0* > /tmp/script.sql
+
+mysql -uroot -padmin -e "SHOW BINLOG EVENTS IN 'mysql-bin.000003'"
+
+mysqlbinlog --start-position=4 --stop-position=900 mysql-bin.000003 | mysql -uroot -padmin
