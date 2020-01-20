@@ -1,0 +1,5 @@
+
+--opt  Shorthand for --add-drop-table --add-locks --create-options --disable-keys --extended-insert --lock-tables --quick --set-charset
+mysqldump -uroot -padmin --single-transaction --opt --add-drop-database -B teste02 --result-file=/tmp/teste02.sql
+mysqldump -uroot -proot --single-transaction --opt --add-drop-database -B zabbix --result-file=c:\sil\sil.sql
+
