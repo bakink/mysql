@@ -3,3 +3,19 @@
 mysqldump -uroot -padmin --single-transaction --opt --add-drop-database -B teste02 --result-file=/tmp/teste02.sql
 mysqldump -uroot -proot --single-transaction --opt --add-drop-database -B zabbix --result-file=c:\sil\sil.sql
 
+Examples
+------------
+mysqldump --all-databases --user=root --password=admin --single-transaction --opt --add-drop-database --routines --triggers --events > /tmp/all-databases.sql
+mysqldump --all-databases --user=root --password=admin --single-transaction --opt --add-drop-database --routines --triggers --events | gzip > /tmp/all-databases.sql.gz
+mysqldump -uroot -padmin --single-transaction --opt --add-drop-database --databases teste01 > /tmp/teste01.sql
+mysqldump -uroot -padmin --single-transaction --opt --add-drop-database -B teste01 > /tmp/teste01.sql (-B ou --databases  create database)
+mysqldump -uroot -padmin --single-transaction --opt teste01 > /tmp/teste01.sql
+mysqldump -uroot -padmin --single-transaction --opt --add-drop-database --databases teste01 teste02 > /tmp/teste01_02.sql
+mysqldump -uroot -padmin --single-transaction --opt teste01 customer > /tmp/customer.sql
+mysqldump -uroot -padmin --single-transaction --opt teste02 customer emp > /tmp/customer_emp.sql
+-- Only DDL 
+mysqldump -uroot -padmin --no-data --routines --triggers --events teste02 > teste02_ddl.sql
+-- Only Data 
+mysqldump -uroot -padmin --single-transaction --opt --no-create-info teste02 > teste02_data.sql
+-- Ignore table 
+mysqldump -uroot -padmin --single-transaction --opt --add-drop-database -B teste02 --ignore-table=teste02.customer > teste02_ignore.sql
