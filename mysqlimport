@@ -1,0 +1,16 @@
+
+-- O comando CREATE DATABASE está no DUMP 
+mysql -uroot -padmin < bd01.sql
+-- O comando CREATE DATABASE NÃO está no DUMP 
+mysql -uroot -padmin bd01 < bd01.sql
+-- Import com log 
+mysql -uroot -padmin < /tmp/all-databases.sql --verbose > /tmp/import.log
+-- Import com logs separados 
+mysql -uroot -padmin < /tmp/all-databases.sql --verbose > /tmp/import.log 2> /tmp/import_erro.log
+-- Import de tabela customer para o banco bd01 
+mysql -uroot -padmin bd01 < customer.sql 
+-- Import remoto 
+mysql -hlinux1 -p3306 -uroot -padmin bd01 < bd01.sql 
+
+-- Extrair scripts de um único banco de dados do arquivo all-databases.sql para ser importado 
+sed -n '/^-- Current Database: `bd01`/,/^-- Current Database: `/p' /tmp/all-databases.sql > /tmp/bd01.sql
