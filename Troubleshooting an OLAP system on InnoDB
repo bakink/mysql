@@ -1,0 +1,11 @@
+--https://mydbops.wordpress.com/2020/01/22/troubleshooting-an-olap-system-on-innodb/
+
+The default value of innodb_stats_persistent_sample_pages and innodb_stats_transient_sample_pages are 20 and 8 respectively, 
+which is too low for our dataset, This works wells for smaller tables, but in our case tables are in few 100’s of GB. 
+We increased the values below globally since its a dynamic variable by 10X approx.
+
+mysql> set global innodb_stats_persistent_sample_pages=200;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set global innodb_stats_transient_sample_pages=100;
+Query OK, 0 rows affected (0.00 sec)
