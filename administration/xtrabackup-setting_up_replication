@@ -1,0 +1,4 @@
+--https://www.percona.com/doc/percona-xtrabackup/2.1/howtos/setting_up_replication.html
+--https://www.stephenrlang.com/2016/08/setting-up-mysql-master-slave-replication-with-xtrabackup/
+--https://www.looklinux.com/how-to-setup-mysql-master-slave-replication-using-percona-xtrabackup/
+--https://minervasql.com/index.php/2019/11/29/setting-up-mysql-replication-with-percona-xtrabackup/
