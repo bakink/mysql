@@ -1,0 +1,7 @@
+--https://blog.dbi-services.com/refactoring-procedural-to-sql-an-example-with-mysql-sakila/
+sudo yum install -y https://yum.oracle.com/repo/OracleLinux/OL7/MySQL80_community/x86_64/getPackage/mysql-community-devel-8.0.19-1.el7.x86_64.rpm
+sudo systemctl start mysqld.service
+mysql -uroot -p
+mysql --connect-expired-password --user=root \
+--password=$(sudo awk '/temporary password/{print $NF}' /var/log/mysqld.log) \
+-e "alter user 'root'@'localhost' identified by '2020 @FranckPachot';"
