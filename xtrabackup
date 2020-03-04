@@ -1,4 +1,5 @@
 --https://www.digitalocean.com/community/tutorials/how-to-configure-mysql-backups-with-percona-xtrabackup-on-ubuntu-16-04
+--https://www.fromdual.com/xtrabackup_in_a_nutshell
 
 ulimit -n 10240
 filename="backup_`date +%Y%m%d_%k_%M`"
