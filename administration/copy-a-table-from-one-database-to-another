@@ -1,0 +1,11 @@
+
+--https://stackoverflow.com/questions/12242772/easiest-way-to-copy-a-table-from-one-database-to-another
+
+mysqldump --host=LAPTOP-HIMG1TC3 --no-create-info --no-create-db --user=zabbix --password=zabbix zabbix LogGetToken --where=" GainTime >= SUBDATE(CURDATE(),1) AND GainTime < SUBDATE(CURDATE(),0)" > /backup/dumps.sql
+perl -i -pe 's/LogGetToken/loggettoken_20200304/g' /backup/dumps.sql
+mysql --host=LAPTOP-HIMG1TC3 --user=zabbix --password=zabbix zabbix < /backup/dumps.sql
+
+
+mysqldump --no-create-info --no-create-db --user=user1 --password=password1 database1 table1 \
+| sed -e 's/`table1`/`table2`/' \
+| mysql --user=user2 --password=password2 database2
