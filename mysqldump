@@ -21,3 +21,6 @@ mysqldump -uroot -padmin --no-data --routines --triggers --events teste02 > test
 mysqldump -uroot -padmin --single-transaction --opt --no-create-info teste02 > teste02_data.sql
 -- Ignore table 
 mysqldump -uroot -padmin --single-transaction --opt --add-drop-database -B teste02 --ignore-table=teste02.customer > teste02_ignore.sql
+--dump partition.
+mysqldump --host=LAPTOP-HIMG1TC3 --no-create-info --no-create-db --user=zabbix --password=zabbix zabbix LogGetToken --where=" GainTime >= SUBDATE(CURDATE(),1) AND GainTime < SUBDATE(CURDATE(),0)"
+
