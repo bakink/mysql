@@ -1,12 +1,12 @@
 --https://lefred.be/content/mysql-innodb-disk-space/
 --https://sakthismysqlblog.wordpress.com/2020/02/08/mysql-table-can-have-the-wasted-fragmented-space-without-data-deletion-delete/
+--https://lefred.be/content/overview-of-fragmented-mysql-innodb-tables/
 
-SELECT NAME, TABLE_ROWS, format_bytes(data_length) DATA_SIZE,
-format_bytes(index_length) INDEX_SIZE,
-format_bytes(data_length+index_length) TOTAL_SIZE,
-format_bytes(data_free) DATA_FREE,
-format_bytes(FILE_SIZE) FILE_SIZE,
-format_bytes((FILE_SIZE/10 – (data_length/10 + index_length/10))*10) WASTED_SIZE
-FROM information_schema.TABLES as t
-JOIN information_schema.INNODB_TABLESPACES as it
-ON it.name = concat(table_schema,”/”,table_name) WHERE t.table_schema=’jc’ and t.table_name=’test_frag_Ins’;
+SELECT CONCAT(table_schema, '.', table_name) as 'TABLE', 
+       ENGINE, CONCAT(ROUND(table_rows / 1000000, 2), 'M')  ROWS, 
+       CONCAT(ROUND(data_length / ( 1024 * 1024 * 1024 ), 2), 'G') DATA, 
+       CONCAT(ROUND(index_length / ( 1024 * 1024 * 1024 ), 2), 'G') IDX, 
+       CONCAT(ROUND(( data_length + index_length ) / ( 1024 * 1024 * 1024 ), 2), 'G') 'TOTAL SIZE', 
+       ROUND(index_length / data_length, 2)  IDXFRAC, CONCAT(ROUND(( data_free / 1024 / 1024),2), 'MB') AS data_free 
+FROM information_schema.TABLES  
+ORDER BY data_length + index_length desc LIMIT 10;
