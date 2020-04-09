@@ -1,0 +1,23 @@
+
+https://dinfratechsource.com/2018/11/10/creating-and-restoring-database-backups-with-mysql-enterprise-backup/
+https://mysqlnlinux.blogspot.com/2017/05/mysql-enterprise-backup-how-to-setup.html
+
+--backup
+mysqlbackup.exe --user=root --password --host=localhost --port=3310 --backup-dir="D:\Backup\backupAGDB3" backup-and-apply-log 
+mysqlbackup.exe --user=root --password --host=localhost --port=3313 --backup-dir="D:\Backup\backupAGDB4" backup-and-apply-log 
+mysqlbackup.exe --user=root --password --host=localhost --port=3314 --backup-dir="D:\Backup\backupAGDB5" backup-and-apply-log 
+
+--restore
+mysqlbackup --defaults-file=D:\MySQL_Activegamedb2_5620_S_3308_64Bit\my.ini  --datadir="D:\MySQL_Activegamedb2_5620_S_3308_64Bit/data/" --backup-dir=D:\backup\backupAGDB2 copy-back-and-apply-log --force
+mysqlbackup --defaults-file=D:\MySQL_Activegamedb3_5620_S_3310_64Bit\my.ini  --datadir="D:\MySQL_Activegamedb3_5620_S_3310_64Bit/data/" --backup-dir=D:\backup\backupAGDB3 copy-back-and-apply-log --force
+mysqlbackup --defaults-file=D:\MySQL_Activegamedb4_5620_S_3313_64Bit\my.ini  --datadir="D:\MySQL_Activegamedb4_5620_S_3313_64Bit/data/" --backup-dir=D:\backup\backupAGDB4 copy-back-and-apply-log --force
+mysqlbackup --defaults-file=D:\MySQL_Activegamedb5_5620_S_3314_64Bit\my.ini  --datadir="D:\MySQL_Activegamedb5_5620_S_3314_64Bit/data/" --backup-dir=D:\backup\backupAGDB5 copy-back-and-apply-log --force
+
+
+--slave
+meta/backup_variables.txt | grep binlog_position
+binlog_position=WTDBAG5-6S-bin.000493:521538316
+
+change master to master_host='10.68.41.6',master_user='xxxx',master_password='xxxxx',master_log_file='WTDBAG1-2S-bin.000506',master_log_pos=76832402;
+change master to master_host='10.68.41.5',master_user='xxxx',master_password='xxxxx',master_log_file='WTDBAG3-4S-bin.000511',master_log_pos=1025852251;
+change master to master_host='10.68.41.5',master_user='xxxx',master_password='xxxxx',master_log_file='WTDBAG3-4S-bin.000509',master_log_pos=452859961;
