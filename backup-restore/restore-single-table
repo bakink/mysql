@@ -1,2 +1,3 @@
 --https://severalnines.com/database-blog/how-restore-single-table-using-percona-xtrabackup
 --https://severalnines.com/database-blog/how-restore-single-mysql-table-using-mysqldump
+--https://www.percona.com/blog/2017/03/15/restore-single-innodb-table-full-backup-accidentally-dropping/
