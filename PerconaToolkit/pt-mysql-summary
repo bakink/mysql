@@ -1,0 +1,1 @@
+pt-mysql-summary --host localhost --user root --ask-pass
