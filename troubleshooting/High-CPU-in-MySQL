@@ -1,1 +1,5 @@
-https://www.percona.com/blog/2020/04/23/a-simple-approach-to-troubleshooting-high-cpu-in-mysql/?utm_campaign=2020%20Blog%20Q2&utm_content=127441798&utm_medium=social&utm_source=linkedin&hss_channel=lcp-421929
+--https://www.percona.com/blog/2020/04/23/a-simple-approach-to-troubleshooting-high-cpu-in-mysql/
+
+pidstat -t -p <mysqld_pid> 1:
+
+mysql > select * from performance_schema.threads where THREAD_OS_ID = 32053 \G
