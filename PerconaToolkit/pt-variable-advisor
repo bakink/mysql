@@ -1,1 +1,2 @@
+--https://www.sitepoint.com/optimize-mysql-indexes-slow-queries-configuration/
 pt-variable-advisor h=localhost,u=root,p=root
