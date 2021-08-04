@@ -1,0 +1,137 @@
+1...MySQL Shell dowload edilir ve precheck kontrolleri yapılır.
+https://www.percona.com/blog/2019/09/27/mysql-8-shell-upgrade-checker-utility/
+
+https://dev.mysql.com/downloads/shell/
+
+yum install -y mysql-shell.x86_64
+
+root@vagrant:~# mysqlsh veya 
+root@vagrant:~# mysqlsh root@localhost -e "util.checkForServerUpgrade();"
+
+\c root@localhost
+Please provide the password for 'root@localhost': ****
+
+util.checkForServerUpgrade({"configPath":"/etc/mysql/my.cnf"})
+
+-----------------
+
+The MySQL server at localhost:33060, version 5.7.31-log - MySQL Community
+ 
+Server (GPL), will now be checked for compatibility issues for upgrade to MySQL
+ 
+8.0.21...
+ 
+ 
+ 
+1) Usage of old temporal type
+ 
+  No issues found
+ 
+ 
+ 
+2) Usage of db objects with names conflicting with new reserved keywords
+ 
+  No issues found
+  
+...................
+
+  
+
+Errors:   3
+ 
+Warnings: 18
+ 
+Notices:  0
+ 
+ 
+ 
+3 errors were found. Please correct these issues before upgrading to avoid compatibility issues.
+
+Error varsa kontrol edilir. Düzelttikden sonra düzgün kapatilir.
+***************************
+
+2...backup database
+
+mysqldump -u root -p sakila --lock-all-tables --all-databases -uroot -proot > all_databases.sql
+ 
+3...backup cnf file
+
+cp /etc/my.cnf /etc/my.cnf_bkp
+ 
+4... versiyon kontrol
+
+mysqld -v
+
+
+5...mysql shutdown 
+
+https://www.percona.com/blog/2020/05/07/prepare-mysql-for-a-safe-shutdown/
+
+mysql -uroot -proot
+
+show global variables like "innodb_fast_shutdown";
+set global innodb_fast_shutdown=0;
+show global variables like "innodb_fast_shutdown";
+
+systemctl stop mysql
+
+
+4..download mysql bundle
+
+https://dev.mysql.com/downloads/mysql/
+
+5...extract
+
+tar -xvf mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar
+
+6...rpm upgrade
+
+rpm -Uvh *.rpm
+-U option is used to upgrade the package, 
+-v is to display the message,  
+-h is print hash so that we can see the progress.
+
+
+7...start mysql
+
+systemctl start mysqld
+systemctl status mysqld
+
+logu kontrol et.
+
+/var/log/mysqld.log
+
+
+
+8...Upgrade Check
+
+mysqlcheck -uroot -p --all-databases --check-upgrade
+
+
+9...Authentication Method
+
+user authentication plugin to 'mysql_native_password' again.
+
+vi /etc/my.cnf
+ 
+[mysqld]
+ 
+default_authentication_plugin=mysql_native_password
+
+
+10...Character Sets
+As the new default character set is utf8mb4
+
+[mysqld]
+ 
+character_set_server=latin1
+collation_server=latin1_swedish_ci
+
+
+
+----links
+
+https://severalnines.com/database-blog/moving-mysql-57-mysql-80-what-you-should-know
+https://dataops.barcelona/wp-content/uploads/2019/06/How-to-upgrade-like-a-boss-to-MySQL-8.0_.pdf
+https://severalnines.com/database-blog/tips-for-upgrading-mysql-5-7-to-mysql-8
+https://severalnines.com/database-blog/moving-mysql-57-mysql-80-what-you-should-know
