@@ -1,3 +1,4 @@
+********************************************************************************************
 1...MySQL Shell dowload edilir ve precheck kontrolleri yapılır.
 https://www.percona.com/blog/2019/09/27/mysql-8-shell-upgrade-checker-utility/
 
@@ -19,50 +20,56 @@ The MySQL server at localhost:33060, version 5.7.31-log - MySQL Community
  
 Server (GPL), will now be checked for compatibility issues for upgrade to MySQL
  
-8.0.21...
- 
- 
- 
-1) Usage of old temporal type
+8.0.26...
+
+) Usage of old temporal type
  
   No issues found
  
- 
- 
-2) Usage of db objects with names conflicting with new reserved keywords
+) Usage of db objects with names conflicting with new reserved keywords
  
   No issues found
   
 ...................
 
-  
-
 Errors:   3
- 
 Warnings: 18
- 
 Notices:  0
- 
- 
  
 3 errors were found. Please correct these issues before upgrading to avoid compatibility issues.
 
 Error varsa kontrol edilir. Düzelttikden sonra düzgün kapatilir.
-***************************
 
+********************************************************************************************
 2...backup database
 
-mysqldump -u root -p sakila --lock-all-tables --all-databases -uroot -proot > all_databases.sql
+db küçükse+
+
+----mysqldump -u root -p sakila --lock-all-tables --all-databases -uroot -proot > all_databases.sql
+
+diğer türlü percona xtrabackup install edilir
+
+https://www.percona.com/downloads/Percona-XtraBackup-2.4/LATEST/
+percona-xtrabackup-24-2.4.23-1.el7.x86_64.rpm
+
+yum localinstall percona-xtrabackup-24-2.4.23-1.el7.x86_64.rpm
  
+ulimit -n 10240
+filename="backup_`date +%Y%m%d_%k_%M`"
+/usr/bin/innobackupex --user=backupuser --password=Un*Yg67Tr /backup/mysqlbackup/$filename/ --no-timestamp
+/usr/bin/xtrabackup --prepare --target-dir=/backup/mysqlbackup/$filename/ 
+ 
+******************************************************************************************** 
 3...backup cnf file
 
 cp /etc/my.cnf /etc/my.cnf_bkp
- 
+
+******************************************************************************************** 
 4... versiyon kontrol
 
 mysqld -v
 
-
+********************************************************************************************
 5...mysql shutdown 
 
 https://www.percona.com/blog/2020/05/07/prepare-mysql-for-a-safe-shutdown/
@@ -76,23 +83,26 @@ show global variables like "innodb_fast_shutdown";
 systemctl stop mysql
 
 
-4..download mysql bundle
+********************************************************************************************
+6..download mysql bundle (Mysql 8.22 ve 5.7)
 
 https://dev.mysql.com/downloads/mysql/
 
-5...extract
+********************************************************************************************
+7...extract
 
-tar -xvf mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar
+tar -xvf mysql-8.0.26-1.el7.x86_64.rpm-bundle.tar
 
-6...rpm upgrade
+********************************************************************************************
+8...rpm upgrade
 
 rpm -Uvh *.rpm
 -U option is used to upgrade the package, 
 -v is to display the message,  
 -h is print hash so that we can see the progress.
 
-
-7...start mysql
+********************************************************************************************
+9...start mysql
 
 systemctl start mysqld
 systemctl status mysqld
@@ -101,14 +111,14 @@ logu kontrol et.
 
 /var/log/mysqld.log
 
-
-
-8...Upgrade Check
+********************************************************************************************
+10...Upgrade Check
 
 mysqlcheck -uroot -p --all-databases --check-upgrade
 
 
-9...Authentication Method
+********************************************************************************************
+11...Authentication Method
 
 user authentication plugin to 'mysql_native_password' again.
 
@@ -118,8 +128,8 @@ vi /etc/my.cnf
  
 default_authentication_plugin=mysql_native_password
 
-
-10...Character Sets
+********************************************************************************************
+12...Character Sets
 As the new default character set is utf8mb4
 
 [mysqld]
