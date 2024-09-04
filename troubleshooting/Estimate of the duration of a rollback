@@ -1,0 +1,52 @@
+https://www.anbob.com/archives/8287.html
+
+--------------------------------
+Keep tracking TRX_ROWS_MODIFIED
+
+mysql> pager grep -e "trx_mysql_thread_id: 18" -e trx_rows_modified
+PAGER set to 'grep -e "trx_mysql_thread_id: 18" -e trx_rows_modified'
+mysql> select * from information_schema.innodb_trx\G select sleep(60); select * from information_schema.innodb_trx\G
+         trx_rows_modified: 0
+       trx_mysql_thread_id: 18
+        trx_rows_modified: 19010230
+2 rows in set (0.26 sec)
+
+1 row in set (1 min 0.31 sec)
+
+       trx_mysql_thread_id: 17
+         trx_rows_modified: 18039927
+1 row in set (0.09 sec)
+
+mysql> \n
+PAGER set to stdout
+mysql> select SEC_TO_TIME(round((18039927/(19010230-18039927)*60))) as 'Estimation Time of Rollback';
++--------------------------------+
+| Estimation Time of Rollback |
++--------------------------------+
+| 00:18:36 |
++--------------------------------+
+
+---------------------------------
+
+DELIMITER $$
+
+CREATE FUNCTION RollbackTimeCalc(processID INT, timeInterval INT)
+RETURNS VARCHAR(225)
+DETERMINISTIC
+BEGIN
+  DECLARE RollbackModifiedBeforeInterval INT;
+  DECLARE RollbackModifiedAfterInterval INT;
+  DECLARE RollbackPendingRows INT;
+  DECLARE Result varchar(20);
+      
+      SELECT trx_rows_modified INTO RollbackModifiedBeforeInterval from information_schema.innodb_trx where trx_mysql_thread_id = processID and trx_state = 'ROLLING BACK';
+      do sleep(timeInterval);
+      SELECT trx_rows_modified INTO RollbackModifiedAfterInterval from information_schema.innodb_trx where trx_mysql_thread_id = processID and trx_state = 'ROLLING BACK';
+  
+      set Result=SEC_TO_TIME(round((RollbackModifiedAfterInterval*timeInterval)/(RollbackModifiedBeforeInterval-RollbackModifiedAfterInterval)));
+  
+      SELECT trx_rows_modified INTO RollbackPendingRows from information_schema.innodb_trx where trx_mysql_thread_id = processID and trx_state = 'ROLLING BACK';
+  
+      RETURN(CONCAT('Estimation Time of Rollback : ', Result, ' Pending rows to rollback ', RollbackPendingRows));
+END$$
+DELIMITER ;
