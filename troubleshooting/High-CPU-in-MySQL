@@ -1,5 +1,8 @@
 --https://www.percona.com/blog/2020/04/23/a-simple-approach-to-troubleshooting-high-cpu-in-mysql/
+--https://tanelpoder.com/posts/mysql-now-shows-thread-names-at-os-level/
 
 pidstat -t -p <mysqld_pid> 1:
 
 mysql > select * from performance_schema.threads where THREAD_OS_ID = 32053 \G
+
+
